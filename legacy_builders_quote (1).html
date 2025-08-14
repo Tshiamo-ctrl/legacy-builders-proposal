@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Builders - Web App Development Quotation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8fafc;
+            font-size: 14px;
+        }
+        
+        .pdf-container {
+            max-width: 21cm;
+            min-height: 29.7cm;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px 50px;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6, #10b981);
+        }
+        
+        .company-name {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .tagline {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .content {
+            padding: 50px;
+        }
+        
+        .invoice-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .invoice-header h3 {
+            color: #1e40af;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .invoice-header p {
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .invoice-number {
+            background: #1e40af;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: #3b82f6;
+        }
+        
+        .overview-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #0ea5e9;
+            font-size: 1em;
+            line-height: 1.7;
+        }
+        
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .services-table th {
+            background: #334155;
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .services-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        
+        .services-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .services-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        
+        .service-name {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+        
+        .service-description {
+            font-size: 0.85em;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        
+        .price-cell {
+            text-align: right;
+            font-weight: 600;
+            color: #059669;
+            font-size: 0.95em;
+        }
+        
+        .totals-section {
+            background: #fefce8;
+            border: 1px solid #fde047;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 1em;
+        }
+        
+        .total-row.subtotal {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .total-row.discount {
+            color: #dc2626;
+            font-weight: 500;
+        }
+        
+        .total-row.final {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #1e40af;
+            border-top: 2px solid #3b82f6;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .complimentary-section {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .value-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .service-item {
+            padding: 8px 0;
+            font-size: 0.9em;
+            color: #78716c;
+        }
+        
+        .service-item::before {
+            content: '✓';
+            color: #059669;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .milestones-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .milestone-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .milestone-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        
+        .milestone-number {
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+        
+        .milestone-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .milestone-amount {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 10px;
+        }
+        
+        .milestone-description {
+            font-size: 0.8em;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        
+        .sla-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 25px;
+        }
+        
+        .sla-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9em;
+        }
+        
+        .sla-item:last-child {
+            border-bottom: none;
+        }
+        
+        .sla-label {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        
+        .signatures-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+            padding: 30px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        
+        .signature-block {
+            text-align: center;
+        }
+        
+        .signature-block h4 {
+            color: #1e40af;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #64748b;
+            height: 50px;
+            margin: 25px 0 10px;
+        }
+        
+        .signature-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #64748b;
+        }
+        
+        @media print {
+            body { 
+                background: white;
+                font-size: 12px;
+            }
+            .pdf-container {
+                box-shadow: none;
+                margin: 0;
+            }
+            .milestone-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+        
+        @page {
+            size: A4;
+            margin: 0.5in;
+        }
+    </style>
+</head>
+<body>
+    <div class="pdf-container">
+        <div class="header">
+            <div class="company-name">Legacy Builders</div>
+            <div class="tagline">Professional Web Development & Digital Solutions</div>
+        </div>
+        
+        <div class="content">
+            <div class="invoice-header">
+                <div>
+                    <h3>Service Provider</h3>
+                    <p><strong>Milgrand Tshiamo Masuluke</strong><br>
+                    Developer & Digital Consultant<br>
+                    Legacy Builders</p>
+                </div>
+                <div>
+                    <h3>Client</h3>
+                    <p><strong>Vincent Mbatha</strong><br>
+                    Founder - Legacy Builders</p>
+                    <div class="invoice-number">LB-2025-001</div>
+                    <p style="margin-top: 10px; color: #64748b;"><strong>Date:</strong> 13 August 2025</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">1. Project Overview</h2>
+                <div class="overview-box">
+                    Development and design of a comprehensive 4-page business website with integrated Customer Relationship Management (CRM) system. This digital solution is specifically designed for information sharing and lead capture, providing your business with a professional online presence that drives growth. The project encompasses modern web development practices, administrative functions, branded QR code integration, and an extensive suite of complementary marketing and branding services to ensure maximum return on your digital investment.
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">2. Itemized Service Breakdown</h2>
+                <table class="services-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Service Description</th>
+                            <th style="width: 15%;">Quantity</th>
+                            <th style="width: 20%;">Unit Price (R)</th>
+                            <th style="width: 25%;">Total (R)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="service-name">Web App Development</div>
+                                <div class="service-description">Modern responsive coding, secure backend infrastructure, mobile-optimized responsive layout, performance optimization</div>
+                            </td>
+                            <td>4 pages</td>
+                            <td class="price-cell">750</td>
+                            <td class="price-cell">3,000</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-name">Professional Web Design</div>
+                                <div class="service-description">Custom wireframes, user experience design, branded web graphics, modern styling and visual identity integration</div>
+                            </td>
+                            <td>4 pages</td>
+                            <td class="price-cell">500</td>
+                            <td class="price-cell">2,000</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-name">CRM Integration</div>
+                                <div class="service-description">Lead management system setup, customer database integration, automated workflows configuration</div>
+                            </td>
+                            <td>1 system</td>
+                            <td class="price-cell">1,000</td>
+                            <td class="price-cell">1,000</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-name">Administrative Functions</div>
+                                <div class="service-description">Professional email setup, comprehensive admin dashboards, automation systems, user management tools</div>
+                            </td>
+                            <td>1 setup</td>
+                            <td class="price-cell">1,250</td>
+                            <td class="price-cell">1,250</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="service-name">Branded QR Code Creation</div>
+                                <div class="service-description">Custom designed QR codes for marketing materials, business cards, and promotional content integration</div>
+                            </td>
+                            <td>1 design</td>
+                            <td class="price-cell">350</td>
+                            <td class="price-cell">350</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="totals-section">
+                    <div class="total-row subtotal">
+                        <span>Subtotal:</span>
+                        <span><strong>R7,600</strong></span>
+                    </div>
+                    <div class="total-row discount">
+                        <span>Budget Optimization Discount:</span>
+                        <span><strong>-R1,100</strong></span>
+                    </div>
+                    <div class="total-row">
+                        <span>VAT (15%):</span>
+                        <span>Exempt</span>
+                    </div>
+                    <div class="total-row final">
+                        <span>Total Project Investment:</span>
+                        <span>R6,500</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">3. Complimentary Premium Services</h2>
+                <div class="complimentary-section">
+                    <div class="value-badge">Included Value: R4,500+</div>
+                    <p style="margin-bottom: 15px; font-weight: 500;">The following professional services are included at no additional cost to maximize your project's success and return on investment:</p>
+                    <div class="services-grid">
+                        <div class="service-item">Brand Style Guide & Assets</div>
+                        <div class="service-item">Google Analytics 4 Setup</div>
+                        <div class="service-item">Search Engine Optimization (SEO)</div>
+                        <div class="service-item">Professional Copywriting</div>
+                        <div class="service-item">Video Scripting Services</div>
+                        <div class="service-item">Market Entry Strategy</div>
+                        <div class="service-item">WhatsApp Link & Welcome Bot</div>
+                        <div class="service-item">Facebook Business Integration</div>
+                        <div class="service-item">Google AdSense Configuration</div>
+                        <div class="service-item">Performance Monitoring Setup</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">4. Payment Structure - 3 Milestone Plan</h2>
+                <div class="milestones-container">
+                    <div class="milestone-card">
+                        <div class="milestone-number">1</div>
+                        <div class="milestone-title">Project Initialization</div>
+                        <div class="milestone-amount">R1,950</div>
+                        <div class="milestone-description">30% due upon contract signing to commence development, secure resources, and begin planning phase</div>
+                    </div>
+                    <div class="milestone-card">
+                        <div class="milestone-number">2</div>
+                        <div class="milestone-title">Development Completion</div>
+                        <div class="milestone-amount">R1,950</div>
+                        <div class="milestone-description">30% due upon core development completion, design approval, and successful testing</div>
+                    </div>
+                    <div class="milestone-card">
+                        <div class="milestone-number">3</div>
+                        <div class="milestone-title">Project Handover</div>
+                        <div class="milestone-amount">R2,600</div>
+                        <div class="milestone-description">40% due upon final delivery, training completion, and full project handover</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">5. Service Level Agreement</h2>
+                <div class="sla-section">
+                    <div class="sla-item">
+                        <div class="sla-label">Delivery Timeline:</div>
+                        Estimated completion within 4 weeks from project initialization milestone payment
+                    </div>
+                    <div class="sla-item">
+                        <div class="sla-label">Revision Policy:</div>
+                        Up to 2 comprehensive revision rounds included for design and content. Additional revisions available at R450/hour
+                    </div>
+                    <div class="sla-item">
+                        <div class="sla-label">Intellectual Property:</div>
+                        Upon full payment completion, all custom designs, code, and content become the exclusive property of the client
+                    </div>
+                    <div class="sla-item">
+                        <div class="sla-label">Confidentiality:</div>
+                        Both parties commit to maintaining strict confidentiality regarding all project details and business information
+                    </div>
+                    <div class="sla-item">
+                        <div class="sla-label">Support & Maintenance:</div>
+                        30 days of complimentary post-launch support included. Ongoing maintenance available at R250/page or R500/system integration
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">6. Acceptance & Authorization</h2>
+                <div class="signatures-section">
+                    <div class="signature-block">
+                        <h4>Client Acceptance</h4>
+                        <p style="margin-bottom: 10px;"><strong>Vincent Mbatha</strong><br>
+                        <small>Founder - Legacy Builders</small></p>
+                        <div class="signature-line"></div>
+                        <div class="signature-labels">
+                            <span>Signature</span>
+                            <span>Date</span>
+                        </div>
+                    </div>
+                    <div class="signature-block">
+                        <h4>Service Provider</h4>
+                        <p style="margin-bottom: 10px;"><strong>Milgrand Tshiamo Masuluke</strong><br>
+                        <small>Developer & Digital Consultant</small></p>
+                        <div class="signature-line"></div>
+                        <div class="signature-labels">
+                            <span>Signature</span>
+                            <span>Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
