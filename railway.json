@@ -1,0 +1,11 @@
+{
+  "builds": [
+    {
+      "src": "public/legacy_builders_proposal.html",
+      "use": "@railway/static"
+    }
+  ],
+  "static": {
+    "public": "public"
+  }
+}
